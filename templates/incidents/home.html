@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to CIRS{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-6">
+        <h1 class="display-3 fw-bold mb-4 glow-text">Secure Incident Reporting</h1>
+        <p class="lead mb-4 cyber-text-white">
+            Protect your assets and data. CIRS provides a professional platform to report and track cybersecurity incidents with real-time updates and expert handling.
+        </p>
+        <div class="d-flex gap-3">
+            {% if user.is_authenticated %}
+                <a href="{% url 'report_incident' %}" class="btn btn-cyber px-4 py-2">Report Now</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4 py-2">My Dashboard</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-cyber px-4 py-2">Get Started</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary px-4 py-2">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6 d-none d-lg-block">
+        <div class="position-relative">
+            <div class="p-5 bg-dark rounded-circle border border-accent opacity-25 position-absolute top-50 start-50 translate-middle" style="width: 400px; height: 400px; filter: blur(50px);"></div>
+            <i class="fas fa-user-secret fa-10x text-accent opacity-50 position-relative"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 g-4">
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="mb-3 text-accent"><i class="fas fa-bug fa-3x"></i></div>
+            <h3>Reliable Tracking</h3>
+            <p class="cyber-text-white opacity-75">Track your incident from report to resolution with automated status updates.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="mb-3 text-accent"><i class="fas fa-lock fa-3x"></i></div>
+            <h3>Secure Storage</h3>
+            <p class="cyber-text-white opacity-75">All reports are encrypted and stored securely to ensure data privacy and integrity.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="mb-3 text-accent"><i class="fas fa-bolt fa-3x"></i></div>
+            <h3>Quick Action</h3>
+            <p class="cyber-text-white opacity-75">Our automated triage system ensures critical incidents are prioritized immediately.</p>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5 opacity-25">
+
+<div class="row g-5 mb-5">
+    <!-- Awareness Tips -->
+    <div class="col-lg-8">
+        <h2 class="mb-4 d-flex align-items-center glow-text">
+            <i class="fas fa-lightbulb text-warning me-3"></i>Awareness Tips
+        </h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 bg-dark bg-gradient shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3 text-info">
+                            <i class="fas fa-key fa-2x me-3"></i>
+                            <h5 class="mb-0">Multi-Factor Everything</h5>
+                        </div>
+                        <p class="small cyber-text-white mb-0">Enable MFA on all accounts. It adds a critical second layer of defense even if your password is stolen.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 bg-dark bg-gradient shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3 text-danger">
+                            <i class="fas fa-fish fa-2x me-3"></i>
+                            <h5 class="mb-0">Spot the Phish</h5>
+                        </div>
+                        <p class="small cyber-text-white mb-0">Be skeptical of urgent emails. Check for sender domain mismatches and avoid clicking suspicious links.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 bg-dark bg-gradient shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3 text-success">
+                            <i class="fas fa-sync fa-2x me-3"></i>
+                            <h5 class="mb-0">Patch & Update</h5>
+                        </div>
+                        <p class="small cyber-text-white mb-0">Keep your software and OS updated. Updates contain critical security patches for known vulnerabilities.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0 bg-dark bg-gradient shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3 text-warning">
+                            <i class="fas fa-database fa-2x me-3"></i>
+                            <h5 class="mb-0">Regular Backups</h5>
+                        </div>
+                        <p class="small cyber-text-white mb-0">Always have an offline backup of your critical data to recover quickly from ransomware attacks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Alerts -->
+    <div class="col-lg-4">
+        <h2 class="mb-4 d-flex align-items-center glow-text">
+            <i class="fas fa-bell text-danger me-3"></i>Latest Alerts
+        </h2>
+        <div class="list-group list-group-flush border-top border-bottom border-secondary border-opacity-25 bg-transparent">
+            <div class="list-group-item bg-transparent px-0 py-3 border-secondary border-opacity-25">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge rounded-pill bg-danger">CRITICAL</span>
+                    <small class="text-light opacity-50">2 hours ago</small>
+                </div>
+                <h6 class="mb-1 text-white">New "Z-Alpha" Ransomware Outbreak</h6>
+                <p class="small cyber-text-white mb-0">Major strain targeting Windows servers globally. Update firewalls immediately.</p>
+            </div>
+            <div class="list-group-item bg-transparent px-0 py-3 border-secondary border-opacity-25">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge rounded-pill bg-warning text-dark">HIGH</span>
+                    <small class="text-light opacity-50">5 hours ago</small>
+                </div>
+                <h6 class="mb-1 text-white">Safari Zero-Day Exploited</h6>
+                <p class="small cyber-text-white mb-0">Exploit allows remote code execution. iOS and macOS patches available.</p>
+            </div>
+            <div class="list-group-item bg-transparent px-0 py-3 border-secondary border-opacity-25">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge rounded-pill bg-info">MEDIUM</span>
+                    <small class="text-light opacity-50">1 day ago</small>
+                </div>
+                <h6 class="mb-1 text-white">SMS Phishing Campaign Active</h6>
+                <p class="small cyber-text-white mb-0">Scammers targeting banking users with deceptive links. Stay vigilant.</p>
+            </div>
+        </div>
+        <div class="mt-4 text-center">
+            <a href="#" class="btn btn-sm btn-outline-cyber border-opacity-50">View All Advisories</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

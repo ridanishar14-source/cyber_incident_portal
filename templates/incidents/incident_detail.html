@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Incident #{{ incident.id }} - CIRS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="mb-4 d-flex align-items-center">
+            <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary me-3">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <h1 class="h3 mb-0">Incident Details <span class="text-muted">#{{ incident.id }}</span> {% if incident.report_id %}<span class="text-accent ms-2">({{ incident.report_id }})</span>{% endif %}</h1>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card p-4 h-100">
+                    <h2 class="h4 mb-3">{{ incident.title }}</h2>
+                    <p class="text-muted">{{ incident.description }}</p>
+                    
+                    {% if incident.evidence %}
+                        <div class="mt-4">
+                            <h5 class="small text-uppercase text-muted">Evidence Uploaded</h5>
+                            <a href="{{ incident.evidence.url }}" class="btn btn-outline-accent btn-sm mt-2" target="_blank">
+                                <i class="fas fa-download me-2"></i> Download Evidence
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4 h-100 cyber-border">
+                    <h5 class="small text-uppercase text-muted mb-4">Metadata</h5>
+                    
+                    {% if incident.report_id %}
+                    <div class="mb-3">
+                        <label class="d-block small text-muted">Report ID</label>
+                        <code class="text-accent fs-6">{{ incident.report_id }}</code>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="d-block small text-muted">Status</label>
+                        <span class="badge {% if incident.status == 'SUBMITTED' %}badge-submitted{% elif incident.status == 'UNDER_REVIEW' %}badge-under-review{% elif incident.status == 'INVESTIGATING' %}badge-investigating{% elif incident.status == 'RESOLVED' %}badge-resolved{% else %}badge-closed{% endif %} px-3 py-2">
+                            {{ incident.get_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="d-block small text-muted">Incident Type</label>
+                        <span class="text-accent fw-bold">{{ incident.get_incident_type_display }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="d-block small text-muted">Severity</label>
+                        <span class="text-{{ incident.severity|lower }}">{{ incident.get_severity_display }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="d-block small text-muted">Submitted On</label>
+                        <span>{{ incident.created_at|date:"F d, Y H:i" }}</span>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-top border-secondary">
+                        <p class="small text-muted mb-0">Reporter: {{ incident.reporter.username }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-low { color: #28a745; }
+    .text-medium { color: #ffcc00; }
+    .text-high { color: #fd7e14; }
+    .text-critical { color: #ff3e3e; text-shadow: 0 0 5px #ff3e3e; }
+</style>
+{% endblock %}

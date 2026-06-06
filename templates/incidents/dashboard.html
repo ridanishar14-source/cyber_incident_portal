@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - CIRS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="h2 glow-text">My Reports</h1>
+    <a href="{% url 'report_incident' %}" class="btn btn-cyber">Submit New Report</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form action="{% url 'search' %}" method="get" class="d-flex">
+            <input type="text" name="q" class="form-control bg-dark border-secondary text-white me-2" placeholder="Search incidents..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-outline-accent">Search</button>
+        </form>
+    </div>
+</div>
+
+{% if incidents %}
+    <div class="row g-4">
+        {% for incident in incidents %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 cyber-border">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge {% if incident.status == 'SUBMITTED' %}badge-submitted{% elif incident.status == 'UNDER_REVIEW' %}badge-under-review{% elif incident.status == 'INVESTIGATING' %}badge-investigating{% elif incident.status == 'RESOLVED' %}badge-resolved{% else %}badge-closed{% endif %}">
+                                {{ incident.get_status_display }}
+                            </span>
+                            <span class="small text-muted">{{ incident.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        {% if incident.report_id %}
+                            <div class="mb-2">
+                                <code class="text-accent small">{{ incident.report_id }}</code>
+                            </div>
+                        {% endif %}
+                        <h5 class="card-title">{{ incident.title }}</h5>
+                        <p class="card-text text-muted small">{{ incident.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <span class="small text-accent fw-bold">{{ incident.get_incident_type_display }}</span>
+                            <a href="{% url 'incident_detail' incident.pk %}" class="btn btn-sm btn-outline-secondary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-4x text-muted mb-3"></i>
+        <p class="lead text-muted">No incidents found.</p>
+        {% if not request.GET.q %}
+            <p>Ready to secure your workspace? <a href="{% url 'report_incident' %}" class="text-accent">Report an incident now.</a></p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

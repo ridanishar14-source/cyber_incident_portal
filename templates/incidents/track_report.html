@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Track Incident Report - CIRS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .track-search-card {
+        background: linear-gradient(135deg, rgba(17, 17, 17, 0.9) 0%, rgba(20, 20, 20, 0.9) 100%);
+        border: 1px solid rgba(0, 255, 157, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        border-radius: 16px;
+    }
+
+    .border-accent-focus:focus {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 0 10px rgba(0, 255, 157, 0.3) !important;
+    }
+
+    /* Visual Stepper / Progress Bar */
+    .stepper-container {
+        position: relative;
+        margin: 3rem 0;
+    }
+
+    .stepper-line {
+        position: absolute;
+        top: 20px;
+        left: 12.5%;
+        right: 12.5%;
+        height: 4px;
+        background-color: #222;
+        z-index: 1;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .stepper-line-progress {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-color) 0%, #00d2ff 100%);
+        box-shadow: 0 0 10px var(--accent-color);
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stepper-step {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        width: 20%;
+    }
+
+    .step-bubble {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: #111;
+        border: 2px solid #333;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        transition: all 0.5s ease;
+    }
+
+    .step-bubble.active {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: #050505;
+        box-shadow: 0 0 20px var(--accent-color);
+    }
+
+    .step-bubble.completed {
+        background-color: rgba(0, 255, 157, 0.2);
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    .step-label {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: color 0.5s ease;
+    }
+
+    .step-label.active {
+        color: var(--accent-color) !important;
+        text-shadow: 0 0 5px rgba(0, 255, 157, 0.4);
+    }
+
+    .step-label.completed {
+        color: rgba(0, 255, 157, 0.8) !important;
+    }
+
+    .step-desc {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 0.25rem;
+    }
+
+    /* Glow details */
+    .glow-accent {
+        text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card p-5 track-search-card mb-4">
+            <h2 class="mb-4 text-center glow-text glow-accent">Track Incident Report</h2>
+            <p class="text-center text-muted mb-4">
+                Enter your unique Report ID below to view the real-time review and resolution status of your cyber incident report.
+            </p>
+
+            <form method="get" class="mb-4">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-dark border-secondary text-accent">
+                        <i class="fas fa-fingerprint"></i>
+                    </span>
+                    <input type="text" name="report_id" class="form-control bg-dark border-secondary text-white border-accent-focus" 
+                           placeholder="Enter Report ID (e.g. REP-XXXXXXXX)" value="{{ report_id }}" required>
+                    <button type="submit" class="btn btn-cyber px-4">Track Status</button>
+                </div>
+            </form>
+
+            {% if error_msg %}
+                <div class="alert alert-danger bg-dark border-danger text-danger mt-3" role="alert">
+                    <i class="fas fa-triangle-exclamation me-2"></i> {{ error_msg }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if incident %}
+            <div class="card p-5 track-search-card mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap border-bottom border-secondary pb-3">
+                    <div>
+                        <h4 class="mb-1 text-white">Report Status</h4>
+                        <span class="small text-muted">ID: <code class="text-accent">{{ incident.report_id }}</code></span>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge {% if incident.status == 'SUBMITTED' %}badge-submitted{% elif incident.status == 'UNDER_REVIEW' %}badge-under-review{% elif incident.status == 'INVESTIGATING' %}badge-investigating{% elif incident.status == 'RESOLVED' %}badge-resolved{% else %}badge-closed{% endif %} px-3 py-2 fs-6">
+                            {{ incident.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Visual Stepper -->
+                <div class="stepper-container">
+                    <div class="stepper-line">
+                        <div class="stepper-line-progress" style="width: {{ progress_pct }}%;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <!-- Step 1: Submitted -->
+                        <div class="stepper-step">
+                            <div class="step-bubble {% if step == 1 %}active{% elif step > 1 %}completed{% endif %}">
+                                <i class="fas {% if step > 1 %}fa-check{% else %}fa-file-shield{% endif %}"></i>
+                            </div>
+                            <div class="step-label {% if step == 1 %}active{% elif step > 1 %}completed{% endif %}">
+                                Submitted
+                            </div>
+                            <div class="step-desc d-none d-md-block">Report successfully filed</div>
+                        </div>
+
+                        <!-- Step 2: Under Review -->
+                        <div class="stepper-step">
+                            <div class="step-bubble {% if step == 2 %}active{% elif step > 2 %}completed{% endif %}">
+                                <i class="fas {% if step > 2 %}fa-check{% else %}fa-magnifying-glass{% endif %}"></i>
+                            </div>
+                            <div class="step-label {% if step == 2 %}active{% elif step > 2 %}completed{% endif %}">
+                                Under Review
+                            </div>
+                            <div class="step-desc d-none d-md-block">Assigned to team</div>
+                        </div>
+
+                        <!-- Step 3: Investigating -->
+                        <div class="stepper-step">
+                            <div class="step-bubble {% if step == 3 %}active{% elif step > 3 %}completed{% endif %}">
+                                <i class="fas {% if step > 3 %}fa-check{% else %}fa-shield-halved{% endif %}"></i>
+                            </div>
+                            <div class="step-label {% if step == 3 %}active{% elif step > 3 %}completed{% endif %}">
+                                Investigating
+                            </div>
+                            <div class="step-desc d-none d-md-block">Actively investigating</div>
+                        </div>
+
+                        <!-- Step 4: Resolved -->
+                        <div class="stepper-step">
+                            <div class="step-bubble {% if step == 4 %}active{% elif step > 4 %}completed{% endif %}">
+                                <i class="fas {% if step > 4 %}fa-check{% else %}fa-square-check{% endif %}"></i>
+                            </div>
+                            <div class="step-label {% if step == 4 %}active{% elif step > 4 %}completed{% endif %}">
+                                Resolved
+                            </div>
+                            <div class="step-desc d-none d-md-block">Mitigated & resolved</div>
+                        </div>
+
+                        <!-- Step 5: Closed -->
+                        <div class="stepper-step">
+                            <div class="step-bubble {% if step == 5 %}active{% endif %}">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="step-label {% if step == 5 %}active{% endif %}">
+                                Closed
+                            </div>
+                            <div class="step-desc d-none d-md-block">Case finalized</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Details Box -->
+                <div class="bg-dark rounded p-4 border border-secondary mt-5">
+                    <h5 class="text-accent mb-3"><i class="fas fa-circle-info me-2"></i>Incident Information</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <span class="d-block small text-muted">Title</span>
+                            <span class="text-white fw-bold">{{ incident.title }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="d-block small text-muted">Incident Type</span>
+                            <span class="text-white">{{ incident.get_incident_type_display }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="d-block small text-muted">Severity</span>
+                            <span class="text-white">
+                                <span class="badge bg-opacity-10 bg-{% if incident.severity == 'LOW' %}success{% elif incident.severity == 'MEDIUM' %}warning{% elif incident.severity == 'HIGH' %}danger{% else %}danger{% endif %} text-{% if incident.severity == 'LOW' %}success{% elif incident.severity == 'MEDIUM' %}warning{% elif incident.severity == 'HIGH' %}danger{% else %}danger{% endif %} border border-{% if incident.severity == 'LOW' %}success{% elif incident.severity == 'MEDIUM' %}warning{% elif incident.severity == 'HIGH' %}danger{% else %}danger{% endif %} px-2 py-1">
+                                    {{ incident.get_severity_display }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="d-block small text-muted">Submitted Date</span>
+                            <span class="text-white">{{ incident.created_at|date:"F d, Y H:i" }} UTC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

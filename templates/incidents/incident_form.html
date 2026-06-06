@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Report Incident - CIRS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card p-4">
+            <h2 class="mb-4 glow-text text-center">New Incident Report</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="alert alert-info mt-4 bg-dark border-accent text-accent small">
+                    <i class="fas fa-info-circle me-2"></i> Ensure all details are accurate. Critical incidents will be escalated immediately.
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-cyber py-3">Submit Report</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Darkening crispy form inputs */
+    input, textarea, select {
+        background-color: #1a1a1a !important;
+        border: 1px solid #333 !important;
+        color: white !important;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 0 5px var(--accent-color) !important;
+    }
+</style>
+{% endblock %}

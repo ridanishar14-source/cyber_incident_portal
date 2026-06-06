@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}About CIRS - Cyber Incident Reporting System{% endblock %}
+
+{% block content %}
+<div class="row pt-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold glow-text mb-4">About CIRS</h1>
+        <p class="lead cyber-text-white mb-5">
+            The Cyber Incident Reporting System (CIRS) is a dedicated platform built for the modern digital landscape, providing a secure bridge between affected users and security response teams.
+        </p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Mission -->
+    <div class="col-md-6">
+        <div class="card h-100 p-4 border-accent border-opacity-25 bg-dark shadow-lg">
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-accent bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="fas fa-bullseye text-accent fa-2x"></i>
+                </div>
+                <h2 class="mb-0 h3">Our Mission</h2>
+            </div>
+            <p class="cyber-text-white">
+                To create a safer digital environment by providing a seamless, secure, and rapid channel for reporting cybersecurity threats. We aim to reduce the impact of digital attacks through early detection and coordinated intelligence.
+            </p>
+        </div>
+    </div>
+    <!-- Objectives -->
+    <div class="col-md-6">
+        <div class="card h-100 p-4 border-accent border-opacity-25 bg-dark shadow-lg">
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-accent bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="fas fa-shield-halved text-accent fa-2x"></i>
+                </div>
+                <h2 class="mb-0 h3">Core Objectives</h2>
+            </div>
+            <ul class="cyber-text-white list-unstyled">
+                <li class="mb-2"><i class="fas fa-check text-accent me-2"></i> Ensure end-to-end encryption for all incident data.</li>
+                <li class="mb-2"><i class="fas fa-check text-accent me-2"></i> Minimize response time through automated triage.</li>
+                <li class="mb-2"><i class="fas fa-check text-accent me-2"></i> Provide actionable security intelligence to users.</li>
+                <li class="mb-2"><i class="fas fa-check text-accent me-2"></i> Maintain transparency in the resolution process.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="py-5">
+    <h2 class="text-center mb-5 glow-text">How It Works</h2>
+    <div class="row g-4 text-center">
+        <!-- Step 1 -->
+        <div class="col-md-4">
+            <div class="p-4">
+                <div class="display-4 fw-bold text-accent opacity-25 mb-3">01</div>
+                <h4 class="mb-3">Report Submission</h4>
+                <p class="cyber-text-white small">Users submit detailed information about the incident, including type, severity, and any available digital evidence like screenshots or logs.</p>
+            </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="col-md-4">
+            <div class="p-4 border-start border-end border-secondary border-opacity-25">
+                <div class="display-4 fw-bold text-accent opacity-25 mb-3">02</div>
+                <h4 class="mb-3">Expert Analysis</h4>
+                <p class="cyber-text-white small">Our platform automatically prioritizes reports based on severity. Security analysts then review the data to determine the best course of action.</p>
+            </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="col-md-4">
+            <div class="p-4">
+                <div class="display-4 fw-bold text-accent opacity-25 mb-3">03</div>
+                <h4 class="mb-3">Resolution & Alert</h4>
+                <p class="cyber-text-white small">Once investigated, users receive a status update. Critical patterns are used to generate global alerts to protect other users in real-time.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <a href="{% url 'report_incident' %}" class="btn btn-cyber px-5">Submit a Report Now</a>
+</div>
+{% endblock %}

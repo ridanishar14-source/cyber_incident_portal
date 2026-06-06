@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Admin Login - Secure Portal - CIRS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-login-card {
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(20, 5, 5, 0.95) 100%);
+        border: 1px solid rgba(255, 62, 62, 0.3);
+        box-shadow: 0 0 30px rgba(255, 62, 62, 0.15);
+        border-radius: 16px;
+    }
+
+    .border-accent-focus:focus {
+        border-color: var(--danger-color) !important;
+        box-shadow: 0 0 10px rgba(255, 62, 62, 0.3) !important;
+    }
+
+    .btn-admin {
+        background: transparent;
+        border: 1px solid var(--danger-color);
+        color: var(--danger-color);
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-admin:hover {
+        background: var(--danger-color);
+        color: #000;
+        box-shadow: 0 0 15px var(--danger-color);
+    }
+
+    .text-danger-glow {
+        color: var(--danger-color);
+        text-shadow: 0 0 10px rgba(255, 62, 62, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center pt-5">
+    <div class="col-md-5">
+        <div class="card p-5 admin-login-card">
+            <div class="text-center mb-4">
+                <i class="fas fa-lock-open fa-3x text-danger-glow mb-3"></i>
+                <h2 class="text-center text-danger-glow mb-1">Secure Portal</h2>
+                <span class="small text-muted uppercase text-danger fw-bold tracking-wider">Authorized Personnel Only</span>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="alert alert-danger bg-dark border-danger text-danger small mt-4 p-2">
+                    <i class="fas fa-triangle-exclamation me-2"></i> Warning: Unauthorized access attempts are subject to logging and prosecution.
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-admin py-2">Decrypt & Authenticate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Darken crispy form inputs to match theme */
+    input {
+        background-color: #151515 !important;
+        border: 1px solid #444 !important;
+        color: white !important;
+    }
+    input:focus {
+        border-color: var(--danger-color) !important;
+        box-shadow: 0 0 5px var(--danger-color) !important;
+    }
+</style>
+{% endblock %}

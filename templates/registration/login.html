@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - CIRS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center pt-5">
+    <div class="col-md-5">
+        <div class="card p-5">
+            <h2 class="text-center mb-4 glow-text">Access Portal</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-cyber">Login</button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <p class="text-muted small">New user? <a href="{% url 'register' %}" class="text-accent">Initiate Registration</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Darkening crispy form inputs */
+    input {
+        background-color: #1a1a1a !important;
+        border: 1px solid #333 !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}
