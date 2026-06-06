@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-b#s%5pqwwb#k4j9vbrmcvzt#0n92=tk8t8a%z!%xh((0%98(km
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['your-service-name.onrender.com']
 
 
 # Application definition
@@ -99,6 +99,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://cyber-incident-portal.onrender.com',
 ]
 
 
